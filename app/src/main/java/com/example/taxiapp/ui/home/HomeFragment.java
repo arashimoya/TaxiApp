@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,8 +27,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.taxiapp.FareViewModel;
-import com.example.taxiapp.NavigationActivity;
 import com.example.taxiapp.databinding.FragmentHomeBinding;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -44,12 +44,7 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
 
-    private TextView pickupText;
-    private TextView destinationText;
-    private TextView customerNameText;
-    private Button getFareButton;
-    private Button showPickupButton;
-    private Button showDestinationButton;
+
     private FareViewModel fareViewModel;
 
     private ConstraintLayout pickupLayout;
@@ -66,19 +61,15 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        LinearLayout jobView = binding.jobView;
+        jobView.setVisibility(View.GONE);
 
-        pickupLayout = binding.pickupLayout;
-        destinationLayout = binding.destinationLayout;
-        pickupLayout.setVisibility(View.GONE);
-        destinationLayout.setVisibility(View.GONE);
+        TextView customerNameText = binding.customerNameTv;
+        TextView destinationText = binding.destinationAddress;
+        TextView pickupText = binding.pickupAddressTv;
+        ImageView showPickupImg = binding.showRouteToPickup;
+        ImageView showDestinationImg = binding.showRouteToDestination;
 
-        pickupText = binding.pickupText;
-        destinationText = binding.destinationText;
-        customerNameText = binding.customerNameText;
-        showPickupButton = binding.pickupButton;
-        showDestinationButton = binding.destinationButton;
 
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -92,13 +83,13 @@ public class HomeFragment extends Fragment {
                 pickupText.setText(fare.getPickupAddress());
                 destinationText.setText(fare.getDestinationAddress());
                 customerNameText.setText(fare.getName());
-                destinationLayout.setVisibility(View.VISIBLE);
-                pickupLayout.setVisibility(View.VISIBLE);
 
+                jobView.setVisibility(View.VISIBLE);
             });
         }
 
-        showPickupButton.setOnClickListener(new View.OnClickListener() {
+
+        showPickupImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getLocation(root);
@@ -109,7 +100,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        showDestinationButton.setOnClickListener(new View.OnClickListener() {
+        showDestinationImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getLocation(root);

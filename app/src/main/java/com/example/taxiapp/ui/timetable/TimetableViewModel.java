@@ -1,38 +1,28 @@
 package com.example.taxiapp.ui.timetable;
 
-import android.util.Log;
+import android.app.Application;
 
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModel;
 
-import com.example.taxiapp.Arrival;
+import com.example.taxiapp.Model.Arrival;
 import com.example.taxiapp.Repository;
-import com.example.taxiapp.StopLocation;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.example.taxiapp.Model.StopLocation;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
-import retrofit2.converter.gson.GsonConverterFactory;
-
-public class TimetableViewModel extends ViewModel {
+public class TimetableViewModel extends AndroidViewModel {
     private final MutableLiveData<String> mText;
     private LiveData<List<Arrival>> arrivalLiveData;
-    private MutableLiveData<List<StopLocation>> stopsLiveData;
+    private LiveData<List<StopLocation>> stopsLiveData;
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final Repository repository;
 
 
-    public TimetableViewModel() {
-        super();
-        repository = Repository.getInstance();
+    public TimetableViewModel(Application app) {
+        super(app);
+        repository = Repository.getInstance(app);
         mText = new MutableLiveData<>();
         stopsLiveData = new MutableLiveData<>();
         mText.setValue("This is timetable fragment");
@@ -49,8 +39,9 @@ public class TimetableViewModel extends ViewModel {
     }
 
 
-    public MutableLiveData<List<StopLocation>> getAllStops(){
+    public LiveData<List<StopLocation>> getAllStops(){
         isLoading.setValue(true);
+        stopsLiveData = repository.getStops();
         return stopsLiveData;
     }
 

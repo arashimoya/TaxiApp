@@ -1,8 +1,6 @@
 package com.example.taxiapp.ui.timetable;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,24 +13,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.taxiapp.Arrival;
-import com.example.taxiapp.ArrivalsAdapter;
-import com.example.taxiapp.NavigationActivity;
-import com.example.taxiapp.R;
-import com.example.taxiapp.StopLocation;
+import com.example.taxiapp.Model.Arrival;
+import com.example.taxiapp.Model.StopLocation;
 import com.example.taxiapp.databinding.FragmentTimetableBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class TimetableFragment extends Fragment {
 
@@ -57,13 +49,24 @@ public class TimetableFragment extends Fragment {
         loadingIndicator = binding.arrivalLoadingIndicator;
         loadingIndicator.setVisibility(View.GONE);
 
-
+        final Button searchButton = binding.searchArrivalsButton;
         locationNames = new ArrayList<>();
-        seedStops();
+        List<String> locationsInString = new ArrayList<>();
+        timetableViewModel.getAllStops().observe(getViewLifecycleOwner(), new Observer<List<StopLocation>>() {
+            @Override
+            public void onChanged(List<StopLocation> stops) {
+                locationNames.addAll(stops);
+                Log.d("TimetableFG",locationNames.get(0).toString());
+                for (StopLocation stop: locationNames) {
+                    locationsInString.add(stop.getStop());
+                }
+            }
+        });
+
         editText = binding.actv;
         ArrayAdapter<String> strAdapter = new ArrayAdapter<String>(root.getContext(),
-                android.R.layout.simple_list_item_1,
-                locationNames.stream().map(StopLocation::getStop).collect(Collectors.toList()));
+                android.R.layout.simple_list_item_1, locationsInString
+        );
         editText.setAdapter(strAdapter);
 
 
@@ -73,7 +76,7 @@ public class TimetableFragment extends Fragment {
         final TextView arrivalsText = binding.textTimetable;
 
 
-        final Button searchButton = binding.searchArrivalsButton;
+
 
         recyclerView = binding.rv;
         recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
@@ -109,7 +112,6 @@ public class TimetableFragment extends Fragment {
         return root;
     }
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -118,17 +120,6 @@ public class TimetableFragment extends Fragment {
 
 
 
-    private void seedStops(){
-        locationNames.add(new StopLocation(8600626, "Kobenhavn H") );
-        locationNames.add(new StopLocation(8600040, "Randers St.") );
-        locationNames.add(new StopLocation(8600066, "Horsens St.") );
-        locationNames.add(new StopLocation(8600001, "Frederikshavn") );
-        locationNames.add(new StopLocation(8600053, "Aarhus H") );
-        locationNames.add(new StopLocation(8600079, "Fredericia St.") );
-        locationNames.add(new StopLocation(8600327, "Sonderborg") );
-        locationNames.add(new StopLocation(8600215, "Esbjerg st.") );
-        locationNames.add(new StopLocation(8600020, "Aalborg") );
 
-    }
 
 }

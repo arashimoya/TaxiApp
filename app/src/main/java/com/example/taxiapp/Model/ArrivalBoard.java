@@ -1,9 +1,8 @@
-package com.example.taxiapp;
+package com.example.taxiapp.Model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ArrivalBoard {

@@ -1,4 +1,6 @@
-package com.example.taxiapp;
+package com.example.taxiapp.RDS;
+
+import com.example.taxiapp.Model.StopLocation;
 
 import java.util.List;
 

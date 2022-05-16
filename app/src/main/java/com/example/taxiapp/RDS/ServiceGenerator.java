@@ -1,4 +1,4 @@
-package com.example.taxiapp;
+package com.example.taxiapp.RDS;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

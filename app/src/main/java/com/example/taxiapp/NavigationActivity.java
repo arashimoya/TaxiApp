@@ -1,60 +1,33 @@
 package com.example.taxiapp;
 
-import android.Manifest;
-import android.content.ActivityNotFoundException;
-
-import android.content.Context;
 import android.content.Intent;
 
-import android.content.IntentSender;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.taxiapp.ui.home.FareViewModel;
+import com.example.taxiapp.ui.timetable.ArrivalsAdapter;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 
-import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.taxiapp.databinding.ActivityNavigationBinding;
 
 import com.google.firebase.auth.FirebaseAuth;
-
-
-import java.util.ArrayList;
-
 
 
 public class NavigationActivity extends AppCompatActivity {
@@ -111,6 +84,11 @@ public class NavigationActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        View headerView = navigationView.getHeaderView(0);
+        TextView emailTv = (TextView) headerView.findViewById(R.id.nav_header_email);
+        TextView usernameTv = (TextView) headerView.findViewById(R.id.nav_header_username);
+        emailTv.setText("jadzia@stachu.com");
+        usernameTv.setText("Jadwiga Stachowska");
         logout = findViewById(R.id.logout);
 
         logout.setOnClickListener(new View.OnClickListener() {

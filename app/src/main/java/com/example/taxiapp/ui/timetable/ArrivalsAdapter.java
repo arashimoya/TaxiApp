@@ -1,4 +1,4 @@
-package com.example.taxiapp;
+package com.example.taxiapp.ui.timetable;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.taxiapp.Model.Arrival;
+import com.example.taxiapp.R;
 
 import java.util.ArrayList;
 import java.util.List;

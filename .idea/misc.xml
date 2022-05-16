@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/arasi/AndroidStudioProjects/TaxiApp/app/src/main/res/drawable/ic_black_directions_24.xml" value="0.356" />
+        <entry key="..\:/Users/arasi/AndroidStudioProjects/TaxiApp/app/src/main/res/drawable/ic_directions_24.xml" value="0.356" />
         <entry key="..\:/Users/arasi/AndroidStudioProjects/TaxiApp/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.254" />
         <entry key="..\:/Users/arasi/AndroidStudioProjects/TaxiApp/app/src/main/res/drawable/my_border.xml" value="0.1575" />
         <entry key="..\:/Users/arasi/AndroidStudioProjects/TaxiApp/app/src/main/res/drawable/navigation_drawer.xml" value="0.254" />
@@ -12,6 +14,7 @@
         <entry key="..\:/Users/arasi/AndroidStudioProjects/TaxiApp/app/src/main/res/layout/app_bar_navigation.xml" value="0.371875" />
         <entry key="..\:/Users/arasi/AndroidStudioProjects/TaxiApp/app/src/main/res/layout/arrival_list_item.xml" value="0.25" />
         <entry key="..\:/Users/arasi/AndroidStudioProjects/TaxiApp/app/src/main/res/layout/content_navigation.xml" value="0.371875" />
+        <entry key="..\:/Users/arasi/AndroidStudioProjects/TaxiApp/app/src/main/res/layout/fare_item.xml" value="0.371875" />
         <entry key="..\:/Users/arasi/AndroidStudioProjects/TaxiApp/app/src/main/res/layout/fragment_gallery.xml" value="0.371875" />
         <entry key="..\:/Users/arasi/AndroidStudioProjects/TaxiApp/app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="..\:/Users/arasi/AndroidStudioProjects/TaxiApp/app/src/main/res/layout/fragment_slideshow.xml" value="0.371875" />
