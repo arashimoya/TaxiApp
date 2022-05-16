@@ -27,4 +27,14 @@ public class Fare {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return "Fare{" +
+                "id=" + id +
+                ", pickupAddress='" + pickupAddress + '\'' +
+                ", destinationAddress='" + destinationAddress + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
