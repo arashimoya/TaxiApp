@@ -20,4 +20,6 @@
     <string name="pickup_text">pickup address</string>
     <string name="destination_text">destination address</string>
     <string name="customer_name_text">customer\'s name</string>
+    <string name="arrivals_text">no arrivals found</string>
+    <string name="searchButtonText">search for arrivals</string>
 </resources>
