@@ -27,7 +27,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.taxiapp.databinding.ActivityNavigationBinding;
-
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class NavigationActivity extends AppCompatActivity {
@@ -42,6 +42,7 @@ public class NavigationActivity extends AppCompatActivity {
     private Button showPickupButton;
     private Button showDestinationButton;
     private FareViewModel fareViewModel;
+    private Button logout;
 
     private ConstraintLayout pickupLayout;
     private ConstraintLayout destinationLayout;
@@ -86,6 +87,7 @@ public class NavigationActivity extends AppCompatActivity {
         customerNameText = findViewById(R.id.customer_name_text);
         showPickupButton = findViewById(R.id.pickup_button);
         showDestinationButton = findViewById(R.id.destination_button);
+        logout = findViewById(R.id.logout);
 
         fareViewModel = new ViewModelProvider(this).get(FareViewModel.class);
         fareViewModel.searchForFare();
@@ -118,6 +120,13 @@ public class NavigationActivity extends AppCompatActivity {
             }
         });
 
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(), Login.class));
+            }
+        });
     }
 
     private void DisplayRoute(String start, String destination) {

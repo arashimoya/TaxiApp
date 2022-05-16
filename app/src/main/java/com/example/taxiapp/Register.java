@@ -15,8 +15,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class Register extends AppCompatActivity {
     EditText Email, Password;
-    Button Register;
-    TextView Login;
+    Button RegisterR;
+    TextView LoginR;
     FirebaseAuth fAuth;
     ProgressBar progressBar;
 
@@ -26,8 +26,8 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         Email = findViewById(R.id.EmailAddress);
         Password = findViewById(R.id.Password);
-        Register = findViewById(R.id.registerButton);
-        Login = findViewById(R.id.goToLogIn);
+        RegisterR = findViewById(R.id.registerButton);
+        LoginR = findViewById(R.id.goToLogIn);
 
         fAuth = FirebaseAuth.getInstance();
         progressBar = findViewById(R.id.progressBar);
@@ -37,31 +37,34 @@ public class Register extends AppCompatActivity {
             finish();
         }
 
-        Register.setOnClickListener(v -> {
+        RegisterR.setOnClickListener(v -> {
             String email = Email.getText().toString().trim();
             String password = Password.getText().toString().trim();
 
             if(TextUtils.isEmpty(email)){
                 Email.setError("Email is required to proceed.");
+                return;
             }
 
             if(TextUtils.isEmpty(password)){
                 Password.setError("Password is required to proceed.");
+                return;
             }
 
-            progressBar.setVisibility(View.VISIBLE);
+
 
             fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
                 if(task.isSuccessful()){
-                    Toast.makeText(this,"Logged In Successfully",Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(), com.example.taxiapp.Login.class));
+                    Toast.makeText(com.example.taxiapp.Register.this,"User Created",Toast.LENGTH_SHORT).show();
+
                 }else {
-                    Toast.makeText(this,"Error!"+ task.getException().getMessage(),Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(Register.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+
                 }
 
             });
         });
-        Login.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(),Login.class)));
+        LoginR.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(),Login.class)));
     }
 }

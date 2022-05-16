@@ -1,5 +1,6 @@
 package com.example.taxiapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,12 +13,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Login extends AppCompatActivity {
     EditText Email, Password;
-    Button Login;
-    TextView Register;
+    Button LoginL;
+    TextView RegisterL;
     FirebaseAuth fAuth;
     ProgressBar progressBar;
 
@@ -27,8 +31,8 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Email = findViewById(R.id.EmailAddressLog);
         Password = findViewById(R.id.PasswordLog);
-        Login = findViewById(R.id.loginButton);
-        Register = findViewById(R.id.goToRegister);
+        LoginL = findViewById(R.id.loginButton);
+        RegisterL = findViewById(R.id.goToRegister);
 
         fAuth = FirebaseAuth.getInstance();
         progressBar = findViewById(R.id.progressBar);
@@ -38,31 +42,49 @@ public class Login extends AppCompatActivity {
             finish();
         }
 
-        Login.setOnClickListener(v -> {
-            String email = Email.getText().toString().trim();
-            String password = Password.getText().toString().trim();
 
-            if(TextUtils.isEmpty(email)){
-                Email.setError("Email is required to proceed.");
-            }
+        LoginL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            if(TextUtils.isEmpty(password)){
-                Password.setError("Password is required to proceed.");
-            }
+                String email = Email.getText().toString().trim();
+                String password = Password.getText().toString().trim();
 
-            progressBar.setVisibility(View.VISIBLE);
-
-            fAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
-                if(task.isSuccessful()){
-                    Toast.makeText(this,"User Created",Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(), com.example.taxiapp.Login.class));
-                }else {
-                    Toast.makeText(this,"Error!",Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
+                if(TextUtils.isEmpty(email)){
+                    Email.setError("Email is Required.");
+                    return;
                 }
 
-            });
+                if(TextUtils.isEmpty(password)){
+                    Password.setError("Password is Required.");
+                    return;
+                }
+
+                if(password.length() < 6){
+                    Password.setError("Password Must be >= 6 Characters");
+                    return;
+                }
+
+
+
+                // authenticate the user
+
+                fAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(Login.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(),NavigationActivity.class));
+                        }else {
+                            Toast.makeText(Login.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    }
+                });
+
+            }
         });
-        Register.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(),Register.class)));
+        RegisterL.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(),Register.class)));
     }
 }
