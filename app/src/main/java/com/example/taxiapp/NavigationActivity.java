@@ -50,7 +50,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.taxiapp.databinding.ActivityNavigationBinding;
 
+import com.google.firebase.auth.FirebaseAuth;
+
+
 import java.util.ArrayList;
+
 
 
 public class NavigationActivity extends AppCompatActivity {
@@ -65,6 +69,7 @@ public class NavigationActivity extends AppCompatActivity {
     private Button showPickupButton;
     private Button showDestinationButton;
     private FareViewModel fareViewModel;
+    private Button logout;
 
     private RecyclerView arrivalList;
     private ArrivalsAdapter arrivalsAdapter;
@@ -107,6 +112,14 @@ public class NavigationActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(), Login.class));
+            }
+        });
     }
 
 

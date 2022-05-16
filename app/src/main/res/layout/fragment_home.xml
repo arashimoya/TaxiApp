@@ -7,11 +7,11 @@
     tools:context=".ui.home.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@drawable/my_border"
         android:id="@+id/pickup_layout"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginTop="104dp"
+        android:background="@drawable/my_border"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,8 +45,8 @@
         android:id="@+id/destination_layout"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/my_border"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pickup_layout">
 
@@ -99,4 +99,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.984" />
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toTopOf="@+id/text_home"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/destination_layout" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
