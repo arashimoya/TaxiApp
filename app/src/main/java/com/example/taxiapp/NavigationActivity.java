@@ -1,18 +1,18 @@
 package com.example.taxiapp;
 
 
+import android.Manifest;
+import android.content.ActivityNotFoundException;
+
+
+import android.content.Context;
 import android.content.Intent;
 
-
-import android.os.Bundle;
 
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.TextView;
-
-
-
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -32,9 +32,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.taxiapp.databinding.ActivityNavigationBinding;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+
+
+import java.util.ArrayList;
+
 
 
 public class NavigationActivity extends AppCompatActivity {
@@ -91,6 +96,7 @@ public class NavigationActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,7 +105,9 @@ public class NavigationActivity extends AppCompatActivity {
             }
         });
 
+
     }
+
 
 
 
