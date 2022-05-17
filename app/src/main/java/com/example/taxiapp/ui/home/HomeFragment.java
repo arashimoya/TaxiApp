@@ -101,12 +101,18 @@ public class HomeFragment extends Fragment {
                         if(fares.stream().noneMatch(Fare::isHasActive)){
                             noActiveJobsTv.setText("No active jobs");
                         }
+                        else{
+                            noActiveJobsTv.setText("");
+                        }
                     }
 
                 }
                 );
                 if(fares.stream().noneMatch(Fare::isHasActive)){
                     noActiveJobsTv.setText("No active jobs");
+                }
+                else{
+                    noActiveJobsTv.setText("");
                 }
             }
         });

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -24,14 +25,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -79,6 +84,8 @@ public class Repository {
         fStore = FirebaseFirestore.getInstance();
         UserID = fAuth.getCurrentUser().getUid();
         fetchFares();
+
+        listenForFares();
     }
 
     public static Repository getInstance(Application app){
@@ -140,14 +147,15 @@ public class Repository {
     }
 
     public void fetchFares(){
-        List<Fare> myFares = new ArrayList<>();
+
         CollectionReference usersRef = fStore.collection("users");
         DocumentReference userIdRef = usersRef.document(UserID);
         userIdRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    List<Fare> faresList = document.toObject(FareDocument.class).fares;
+                    List<Fare> faresList = new ArrayList<>();
+                    faresList = document.toObject(FareDocument.class).fares;
                     Log.d("Firestore", faresList.toString());
                     Log.d("Firestore", String.valueOf((faresList.get(0).isHasActive())));
                     searchedFares.setValue(faresList);
@@ -155,6 +163,35 @@ public class Repository {
                 }
             }
         });
+    }
+
+    private void listenForFares(){
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                final DocumentReference docRef = fStore.collection("users").document(UserID);
+                docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) {
+                        if(error !=null){
+                            Log.w("FStore","listen failed",error);
+
+                        }
+
+                        if(snapshot !=null && snapshot.exists()){
+                            Log.d("FStore","Current data:" + snapshot.getData());
+                            fetchFares();
+                        }
+                        else{
+                            Log.d("FStore","Current data: null");
+                        }
+                    }
+                });
+            }
+        },0,10000);
+
+
     }
 
     public MutableLiveData<List<Fare>> getFares(){

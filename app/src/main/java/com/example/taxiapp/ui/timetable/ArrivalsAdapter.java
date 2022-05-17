@@ -1,5 +1,6 @@
 package com.example.taxiapp.ui.timetable;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,17 @@ public class ArrivalsAdapter  extends RecyclerView.Adapter<ArrivalsAdapter.ViewH
         Arrival currentArrival = arrivals.get(position);
         holder.originTv.setText(currentArrival.getOrigin());
         holder.timeTv.setText(currentArrival.getTime());
+
+        if(position %2 == 1)
+        {
+            holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            //  holder.imageView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        }
+        else
+        {
+            holder.itemView.setBackgroundColor(Color.parseColor("#e3e3e3"));
+            //  holder.imageView.setBackgroundColor(Color.parseColor("#FFFAF8FD"));
+        }
     }
 
     @Override
