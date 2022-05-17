@@ -10,14 +10,16 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:listitem="@layout/message_item" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
 
         <EditText
             android:id="@+id/inputMessage"
@@ -25,6 +27,7 @@
             android:layout_height="wrap_content"
             android:hint="Write your message here"
             android:padding="17dp"
+            android:layout_weight="10"
             />
 
         <ImageButton
@@ -32,7 +35,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_send_24" />
+            android:minWidth="48dp"
+            android:layout_weight="90"
+            android:src="@drawable/ic_baseline_send_24"
+            android:contentDescription="Send message"
+            app:tint="@color/purple_500" />
 
     </LinearLayout>
 

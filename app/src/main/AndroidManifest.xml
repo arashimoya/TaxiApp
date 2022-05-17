@@ -18,9 +18,10 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".CbRadioActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:usesCleartextTraffic="true" />
 
-        android:usesCleartextTraffic="true" >
+
 
 
         <activity
@@ -43,10 +44,11 @@
             android:exported="false"
             android:label="@string/title_activity_navigation"
 
-            android:theme="@style/Theme.TaxiApp.NoActionBar"></activity>
+            android:theme="@style/Theme.TaxiApp.NoActionBar">
 
-            android:theme="@style/Theme.TaxiApp.NoActionBar" >
         </activity>
+
+
 
         <activity
             android:name=".MainActivity"
