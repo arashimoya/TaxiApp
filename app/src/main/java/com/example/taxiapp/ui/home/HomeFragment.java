@@ -39,8 +39,6 @@ public class HomeFragment extends Fragment {
     Button finishBt;
 
 
-
-
     private LocationRequest locationRequest;
     private String currentLocation = "";
 
@@ -52,9 +50,9 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
 
-        View.OnClickListener onItemClickListener = new View.OnClickListener(){
+        View.OnClickListener onItemClickListener = new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 RecyclerView.ViewHolder vh = (RecyclerView.ViewHolder) view.getTag();
                 int position = vh.getAdapterPosition();
 
@@ -73,11 +71,10 @@ public class HomeFragment extends Fragment {
         rv.setAdapter(adapter);
 
 
-
         fareViewModel.getIsLoading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isLoading) {
-                if(isLoading) loadingIndicator.setVisibility(View.VISIBLE);
+                if (isLoading) loadingIndicator.setVisibility(View.VISIBLE);
                 else loadingIndicator.setVisibility(View.GONE);
             }
         });
@@ -87,31 +84,33 @@ public class HomeFragment extends Fragment {
 
                 fareViewModel.getIsLoading().postValue(false);
                 adapter.setActiveFares(fares);
+
                 adapter.setOnItemClickListener(new FareAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(Fare fare) {
-                        Fare fareToChange = fares.stream().filter(f->f.getId() == fare.getId()).findFirst().orElse(null);
-                        fare.setHasActive(false);
-                        fares.set(fares.indexOf(fareToChange), fare);
+               @Override
+               public void onItemClick(Fare fare) {
 
-                        fareViewModel.updateFares(fares);
-                        adapter.setActiveFares(fares);
-                        Log.d("Home fragment",fares.toString());
+                   Fare fareToChange = fares.stream().filter(f -> f.getId() == fare.getId()).findFirst().orElse(null);
+                   fare.setHasActive(false);
+                   fares.set(fares.indexOf(fareToChange), fare);
 
-                        if(fares.stream().noneMatch(Fare::isHasActive)){
-                            noActiveJobsTv.setText("No active jobs");
-                        }
-                        else{
-                            noActiveJobsTv.setText("");
-                        }
-                    }
+                   fareViewModel.updateFares(fares);
+                   adapter.setActiveFares(fares);
+                   Log.d("Home fragment", fares.toString());
 
-                }
+                   if (fares.stream().noneMatch(Fare::isHasActive)) {
+                       noActiveJobsTv.setText("No active jobs");
+                   } else {
+                       noActiveJobsTv.setText("");
+                   }
+               }
+
+
+
+           }
                 );
-                if(fares.stream().noneMatch(Fare::isHasActive)){
+                if (fares.stream().noneMatch(Fare::isHasActive)) {
                     noActiveJobsTv.setText("No active jobs");
-                }
-                else{
+                } else {
                     noActiveJobsTv.setText("");
                 }
             }
@@ -127,7 +126,7 @@ public class HomeFragment extends Fragment {
         binding = null;
     }
 
-    public void setNoActiveJobsText(String text){
+    public void setNoActiveJobsText(String text) {
         noActiveJobsTv.setText(text);
     }
 }

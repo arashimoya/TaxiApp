@@ -111,6 +111,8 @@ public class NavigationActivity extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         UserID = fAuth.getCurrentUser().getUid();
 
+        Log.d("username", fAuth.getCurrentUser().getDisplayName());
+
 
 
         DocumentReference documentReference = fStore.collection("users").document(UserID);
@@ -140,6 +142,8 @@ public class NavigationActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.phone){
+
+//            Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse(phonenumber));
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=dQw4w9WgXcQ"));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setPackage("com.google.android.youtube");

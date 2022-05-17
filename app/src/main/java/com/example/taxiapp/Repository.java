@@ -156,9 +156,10 @@ public class Repository {
                 if (document.exists()) {
                     List<Fare> faresList = new ArrayList<>();
                     faresList = document.toObject(FareDocument.class).fares;
-                    Log.d("Firestore", faresList.toString());
-                    Log.d("Firestore", String.valueOf((faresList.get(0).isHasActive())));
+                    if(faresList!=null)
                     searchedFares.setValue(faresList);
+                    else
+                        searchedFares.setValue(new ArrayList<>());
 
                 }
             }

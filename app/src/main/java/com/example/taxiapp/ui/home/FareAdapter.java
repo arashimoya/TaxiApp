@@ -50,7 +50,7 @@ public class FareAdapter extends RecyclerView.Adapter<FareAdapter.FareViewHolder
     private String currentLocation = "";
     private OnItemClickListener listener;
 
-    class FareViewHolder extends RecyclerView.ViewHolder {
+    public class FareViewHolder extends RecyclerView.ViewHolder {
         private TextView customerNameTv,
                 destinationTv, pickupTv, distanceTv;
         private Button finishBt;
@@ -65,6 +65,7 @@ public class FareAdapter extends RecyclerView.Adapter<FareAdapter.FareViewHolder
             finishBt = itemView.findViewById(R.id.finish_job);
             showPickup = itemView.findViewById(R.id.show_route_to_pickup);
             showDestination = itemView.findViewById(R.id.show_route_to_destination);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -117,15 +118,17 @@ public class FareAdapter extends RecyclerView.Adapter<FareAdapter.FareViewHolder
                     }
                 });
 
-                holder.finishBt.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        currentFare.setHasActive(false);
-                        activeFares.remove(currentFare);
-                        notifyItemRemoved(holder.getAdapterPosition());
-                        notifyItemRangeChanged(holder.getAdapterPosition(), activeFares.size());
-                    }
-                });
+
+
+//                holder.finishBt.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        currentFare.setHasActive(false);
+//                        activeFares.remove(currentFare);
+//                        notifyItemRemoved(holder.getAdapterPosition());
+//                        notifyItemRangeChanged(holder.getAdapterPosition(), activeFares.size());
+//                    }
+//                });
             }
         } else {
             activeFares.remove(position);

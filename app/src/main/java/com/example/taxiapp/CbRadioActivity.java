@@ -23,21 +23,24 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class CbRadioActivity extends AppCompatActivity {
     private ImageButton SendMessage;
     private EditText userMessageInput;
     private String currentUserID, currentUserName, currentDate, currentTime;
-    ArrayList<Message> messageArrayList;
+    List<Message> messageArrayList;
     MessageAdapter messageAdapter;
     RecyclerView recyclerView;
     ProgressDialog progressDialog;
@@ -51,17 +54,14 @@ public class CbRadioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cb_radio);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+        messageArrayList = new ArrayList<>();
         messageAdapter = new MessageAdapter(CbRadioActivity.this,messageArrayList);  
         currentUserID = fAuth.getCurrentUser().getUid();
 
         recyclerView = findViewById(R.id.recycle);
+        recyclerView.setLayoutManager(new LinearLayoutManager(CbRadioActivity.this));
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(messageAdapter);
-        
-        messageArrayList = new ArrayList<Message>();
-
-
 
         InitializeFields();
         getUserInfo();
@@ -71,6 +71,7 @@ public class CbRadioActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SavedMessageToDatabase();
+                userMessageInput.getText().clear();
             }
         });
 
@@ -88,7 +89,9 @@ public class CbRadioActivity extends AppCompatActivity {
     }
 
     private void EventChangeListener() {
-        fStore.collection("cbradio").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        fStore.collection("cbradio")
+                .orderBy("timestamp", Query.Direction.ASCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
@@ -158,6 +161,8 @@ public class CbRadioActivity extends AppCompatActivity {
             messageInfoMap.put("message",message);
             messageInfoMap.put("date", currentDate);
             messageInfoMap.put("time",currentTime);
+            messageInfoMap.put("timestamp", FieldValue.serverTimestamp());
+            messageInfoMap.put("userId",fAuth.getUid());
             chatRef.add(messageInfoMap);
 
 
