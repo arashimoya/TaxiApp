@@ -9,7 +9,7 @@ He asked us if we can make an app that is aesthetically pleasing, is easy to use
 - [x] 1. As an user I want to open the map to see pick-up address, so I can drive to the customer. 
 - [x] 2. As an user I want to open the map to see destination address, so I can drive customer to his destination 
 - [x] 3. As an user I want to see the train arrivals in the timetable, so I can know earlier when the potential customers will get picked-up. 
-- [x] 4. As an user I want to choose the train station, so I can see the timetable for the chosen train station. 
+- [x] 4. As an user I want to choose the train station, so I can see the timetable for the chosen train station. //works only for Danish Train Stations and includes other public transportation methods.
 - [x] 5. As an user I want to accept an order, so I can drive the customer. 
 - [ ] 6. As an user I want to decline an order, so I can cancel it. 
 - [ ] 7. As an user I want to choose whether my car is occupied or free, so I can let the customer know if I am available. 
