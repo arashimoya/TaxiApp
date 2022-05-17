@@ -15,7 +15,7 @@
     <string name="menu_job_list">Job List</string>
     <string name="menu_timetable">Train Timetable</string>
     <string name="menu_slideshow">Settings</string>
-    <string name="menu_history">Previous Rides</string>
+    <string name="menu_history">Previous Fares</string>
     <string name="pickup_title">Pickup</string>
     <string name="pickup_text">pickup address</string>
     <string name="destination_text">destination address</string>
@@ -25,5 +25,6 @@
 
     <string name="arrivals_text">no arrivals found</string>
     <string name="searchButtonText">search for arrivals</string>
+    <string name="menu_phone">Call Dispo</string>
 
 </resources>

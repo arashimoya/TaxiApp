@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -18,10 +19,24 @@ import com.example.taxiapp.RDS.RejseplanenAPI;
 import com.example.taxiapp.RDS.RejseplanenApiBuilder;
 import com.example.taxiapp.RDS.ServiceGenerator;
 import com.example.taxiapp.RDS.TaxiApiMock;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,6 +49,7 @@ public class Repository {
     private final Dao dao;
     private static Repository instance;
     private final MutableLiveData<Fare> searchedFare;
+    private final MutableLiveData<List<Fare>> searchedFares;
     private MutableLiveData<List<Arrival>> searchedArrivals;
     private LiveData<List<StopLocation>> searchedStops;
     private MutableLiveData<ArrivalBoard> arrivalBoardMutableLiveData;
@@ -41,6 +57,10 @@ public class Repository {
 
     private TaxiApiMock taxiApi;
     private RejseplanenAPI rejseplanenAPI;
+
+    private FirebaseAuth fAuth;
+    private FirebaseFirestore fStore;
+    private String UserID;
 
     private Repository(Application app){
         StopLocationDatabase database = StopLocationDatabase.getInstance(app);
@@ -51,11 +71,21 @@ public class Repository {
 
 
         searchedFare = new MutableLiveData<>();
+        searchedFares = new MutableLiveData<>();
+
         searchedArrivals = new MutableLiveData<>();
+
         arrivalBoardMutableLiveData = new MutableLiveData<>();
 
         taxiApi = ServiceGenerator.getTaxiApi();
         rejseplanenAPI = RejseplanenApiBuilder.getRejseplanenAPI();
+
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        UserID = fAuth.getCurrentUser().getUid();
+        fetchFares();
+
+        listenForFares();
     }
 
     public static Repository getInstance(Application app){
@@ -93,44 +123,79 @@ public class Repository {
     }
 
 
-    public void searchForFare(){
-        TaxiApiMock taxiApiMock = ServiceGenerator.getTaxiApi();
-        Call<Fare> call = taxiApiMock.getFare();
-        call.enqueue(new Callback<Fare>() {
-            @EverythingIsNonNull
-            @Override
-            public void onResponse(Call<Fare> call, Response<Fare> response) {
-                if(response.isSuccessful())
-                    searchedFare.setValue(response.body());
+    public void updateFareFStore(List<Fare> fares){
+        CollectionReference usersColl = fStore.collection("users");
+        DocumentReference documentReference = usersColl.document(UserID);
+        Map<String,Object> updates = new HashMap<>();
+        updates.put("fares",FieldValue.delete());
+        documentReference.update(updates);
+        Map<String, Object> faresToUpdate = new HashMap<>();
+        faresToUpdate.put("fares",fares);
+        documentReference.set(faresToUpdate)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("Fstore", "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Fstore","Error updating document",e);
+                    }
+                });
+    }
 
-            }
+    public void fetchFares(){
 
-            @EverythingIsNonNull
-            @Override
-            public void onFailure(Call<Fare> call, Throwable t) {
-                Log.i("Retrofit","Something went wrong! :(");
+        CollectionReference usersRef = fStore.collection("users");
+        DocumentReference userIdRef = usersRef.document(UserID);
+        userIdRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    List<Fare> faresList = new ArrayList<>();
+                    faresList = document.toObject(FareDocument.class).fares;
+                    Log.d("Firestore", faresList.toString());
+                    Log.d("Firestore", String.valueOf((faresList.get(0).isHasActive())));
+                    searchedFares.setValue(faresList);
+
+                }
             }
         });
     }
 
-    public void searchForFares(int id){
-        TaxiApiMock taxiApiMock = ServiceGenerator.getTaxiApi();
-        Call<Fare> call = taxiApiMock.getFare();
-        call.enqueue(new Callback<Fare>() {
-            @EverythingIsNonNull
+    private void listenForFares(){
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
             @Override
-            public void onResponse(Call<Fare> call, Response<Fare> response) {
-                if(response.isSuccessful())
-                    searchedFare.setValue(response.body());
+            public void run() {
+                final DocumentReference docRef = fStore.collection("users").document(UserID);
+                docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) {
+                        if(error !=null){
+                            Log.w("FStore","listen failed",error);
 
-            }
+                        }
 
-            @EverythingIsNonNull
-            @Override
-            public void onFailure(Call<Fare> call, Throwable t) {
-                Log.i("Retrofit","Something went wrong! :(");
+                        if(snapshot !=null && snapshot.exists()){
+                            Log.d("FStore","Current data:" + snapshot.getData());
+                            fetchFares();
+                        }
+                        else{
+                            Log.d("FStore","Current data: null");
+                        }
+                    }
+                });
             }
-        });
+        },0,10000);
+
+
+    }
+
+    public MutableLiveData<List<Fare>> getFares(){
+        return searchedFares;
     }
 
     public LiveData<List<StopLocation>> getStops(){
