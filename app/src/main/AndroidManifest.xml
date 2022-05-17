@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.taxiapp">
+    package="com.example.taxiapp" >
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TaxiApp"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true" >
 
         <activity
             android:name=".Register"
@@ -22,19 +22,17 @@
         <activity
             android:name=".Login"
             android:exported="true" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-       </activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".NavigationActivity"
             android:exported="false"
             android:label="@string/title_activity_navigation"
-            android:theme="@style/Theme.TaxiApp.NoActionBar">
-
-
+            android:theme="@style/Theme.TaxiApp.NoActionBar" >
         </activity>
         <activity
             android:name=".MainActivity"

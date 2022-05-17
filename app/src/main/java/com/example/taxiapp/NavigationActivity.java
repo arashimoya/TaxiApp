@@ -3,6 +3,7 @@ package com.example.taxiapp;
 import android.content.Intent;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
@@ -37,6 +38,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +97,7 @@ public class NavigationActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_timetable, R.id.nav_slideshow)
+                R.id.nav_home, R.id.nav_timetable, R.id.nav_settings, R.id.nav_history)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_navigation);
@@ -119,31 +121,21 @@ public class NavigationActivity extends AppCompatActivity {
             }
         });
 
-        CollectionReference usersRef = fStore.collection("users");
-        DocumentReference userIdRef = usersRef.document(UserID);
-        userIdRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    List<Fare> fares = document.toObject(FareDocument.class).fares;
-
-                }
-            }
-        });
 
 
 
 
 
-        logout = findViewById(R.id.logout);
 
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getApplicationContext(), Login.class));
-            }
-        });
+//        logout = findViewById(R.id.logout);
+//
+//        logout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                FirebaseAuth.getInstance().signOut();
+//                startActivity(new Intent(getApplicationContext(), Login.class));
+//            }
+//        });
 
     }
 
