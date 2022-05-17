@@ -10,6 +10,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -56,8 +57,8 @@ public class TimetableFragment extends Fragment {
             @Override
             public void onChanged(List<StopLocation> stops) {
                 locationNames.addAll(stops);
-                Log.d("TimetableFG",locationNames.get(0).toString());
-                for (StopLocation stop: locationNames) {
+                Log.d("TimetableFG", locationNames.get(0).toString());
+                for (StopLocation stop : locationNames) {
                     locationsInString.add(stop.getStop());
                 }
             }
@@ -70,12 +71,9 @@ public class TimetableFragment extends Fragment {
         editText.setAdapter(strAdapter);
 
 
-
         final TextView textView = binding.textTimetable;
         timetableViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         final TextView arrivalsText = binding.textTimetable;
-
-
 
 
         recyclerView = binding.rv;
@@ -85,28 +83,32 @@ public class TimetableFragment extends Fragment {
         ArrivalsAdapter adapter = new ArrivalsAdapter();
         recyclerView.setAdapter(adapter);
 
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                int id=  Objects.requireNonNull(locationNames.stream().filter(stopLocation -> stopLocation.getStop().equals(editText.getText().toString())).findFirst().orElse(null)).getId();
-                timetableViewModel.getIsLoading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-                    @Override
-                    public void onChanged(Boolean isLoading) {
-                        if(isLoading) loadingIndicator.setVisibility(View.VISIBLE);
-                        else loadingIndicator.setVisibility(View.GONE);
-                    }
-                });
-                timetableViewModel.getArrivalLiveData(id).observe(getViewLifecycleOwner(), new Observer<List<Arrival>>() {
-                    @Override
-                    public void onChanged(List<Arrival> arrivals) {
-                        timetableViewModel.getIsLoading().postValue(false);
-                        adapter.setArrivals(arrivals);
-                    }
-                });
+                if (editText.getText().toString().matches("")) {
+                    Toast.makeText(getContext(), "Please enter some characters first", Toast.LENGTH_SHORT).show();
+                } else {
+                    int id = Objects.requireNonNull(locationNames.stream().filter(stopLocation -> stopLocation.getStop().equals(editText.getText().toString())).findFirst().orElse(null)).getId();
+                    timetableViewModel.getIsLoading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                        @Override
+                        public void onChanged(Boolean isLoading) {
+                            if (isLoading) loadingIndicator.setVisibility(View.VISIBLE);
+                            else loadingIndicator.setVisibility(View.GONE);
+                        }
+                    });
+                    timetableViewModel.getArrivalLiveData(id).observe(getViewLifecycleOwner(), new Observer<List<Arrival>>() {
+                        @Override
+                        public void onChanged(List<Arrival> arrivals) {
+                            timetableViewModel.getIsLoading().postValue(false);
+                            adapter.setArrivals(arrivals);
+                        }
+                    });
+                }
             }
         });
-
 
 
         return root;
@@ -117,9 +119,6 @@ public class TimetableFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-
-
 
 
 }

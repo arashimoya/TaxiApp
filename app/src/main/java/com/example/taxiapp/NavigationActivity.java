@@ -2,8 +2,10 @@ package com.example.taxiapp;
 
 import android.content.Intent;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
@@ -18,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.NavController;
@@ -77,8 +80,6 @@ public class NavigationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-
-
         binding = ActivityNavigationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -111,6 +112,8 @@ public class NavigationActivity extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         UserID = fAuth.getCurrentUser().getUid();
 
+
+
         DocumentReference documentReference = fStore.collection("users").document(UserID);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
@@ -122,21 +125,6 @@ public class NavigationActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
-
-//        logout = findViewById(R.id.logout);
-//
-//        logout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                FirebaseAuth.getInstance().signOut();
-//                startActivity(new Intent(getApplicationContext(), Login.class));
-//            }
-//        });
-
     }
 
 
@@ -144,9 +132,21 @@ public class NavigationActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.navigation, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.phone){
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=dQw4w9WgXcQ"));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setPackage("com.google.android.youtube");
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

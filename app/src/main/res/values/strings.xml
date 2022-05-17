@@ -25,5 +25,6 @@
 
     <string name="arrivals_text">no arrivals found</string>
     <string name="searchButtonText">search for arrivals</string>
+    <string name="menu_phone">Call Dispo</string>
 
 </resources>
