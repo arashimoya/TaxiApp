@@ -18,10 +18,20 @@ import com.example.taxiapp.RDS.RejseplanenAPI;
 import com.example.taxiapp.RDS.RejseplanenApiBuilder;
 import com.example.taxiapp.RDS.ServiceGenerator;
 import com.example.taxiapp.RDS.TaxiApiMock;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,6 +44,7 @@ public class Repository {
     private final Dao dao;
     private static Repository instance;
     private final MutableLiveData<Fare> searchedFare;
+    private final MutableLiveData<List<Fare>> searchedFares;
     private MutableLiveData<List<Arrival>> searchedArrivals;
     private LiveData<List<StopLocation>> searchedStops;
     private MutableLiveData<ArrivalBoard> arrivalBoardMutableLiveData;
@@ -41,6 +52,10 @@ public class Repository {
 
     private TaxiApiMock taxiApi;
     private RejseplanenAPI rejseplanenAPI;
+
+    private FirebaseAuth fAuth;
+    private FirebaseFirestore fStore;
+    private String UserID;
 
     private Repository(Application app){
         StopLocationDatabase database = StopLocationDatabase.getInstance(app);
@@ -51,11 +66,19 @@ public class Repository {
 
 
         searchedFare = new MutableLiveData<>();
+        searchedFares = new MutableLiveData<>();
+
         searchedArrivals = new MutableLiveData<>();
+
         arrivalBoardMutableLiveData = new MutableLiveData<>();
 
         taxiApi = ServiceGenerator.getTaxiApi();
         rejseplanenAPI = RejseplanenApiBuilder.getRejseplanenAPI();
+
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        UserID = fAuth.getCurrentUser().getUid();
+        fetchFares();
     }
 
     public static Repository getInstance(Application app){
@@ -93,44 +116,49 @@ public class Repository {
     }
 
 
-    public void searchForFare(){
-        TaxiApiMock taxiApiMock = ServiceGenerator.getTaxiApi();
-        Call<Fare> call = taxiApiMock.getFare();
-        call.enqueue(new Callback<Fare>() {
-            @EverythingIsNonNull
-            @Override
-            public void onResponse(Call<Fare> call, Response<Fare> response) {
-                if(response.isSuccessful())
-                    searchedFare.setValue(response.body());
+    public void updateFareFStore(List<Fare> fares){
+        CollectionReference usersColl = fStore.collection("users");
+        DocumentReference documentReference = usersColl.document(UserID);
+        Map<String,Object> updates = new HashMap<>();
+        updates.put("fares",FieldValue.delete());
+        documentReference.update(updates);
+        Map<String, Object> faresToUpdate = new HashMap<>();
+        faresToUpdate.put("fares",fares);
+        documentReference.set(faresToUpdate)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("Fstore", "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Fstore","Error updating document",e);
+                    }
+                });
+    }
 
-            }
+    public void fetchFares(){
+        List<Fare> myFares = new ArrayList<>();
+        CollectionReference usersRef = fStore.collection("users");
+        DocumentReference userIdRef = usersRef.document(UserID);
+        userIdRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    List<Fare> faresList = document.toObject(FareDocument.class).fares;
+                    Log.d("Firestore", faresList.toString());
+                    Log.d("Firestore", String.valueOf((faresList.get(0).isHasActive())));
+                    searchedFares.setValue(faresList);
 
-            @EverythingIsNonNull
-            @Override
-            public void onFailure(Call<Fare> call, Throwable t) {
-                Log.i("Retrofit","Something went wrong! :(");
+                }
             }
         });
     }
 
-    public void searchForFares(int id){
-        TaxiApiMock taxiApiMock = ServiceGenerator.getTaxiApi();
-        Call<Fare> call = taxiApiMock.getFare();
-        call.enqueue(new Callback<Fare>() {
-            @EverythingIsNonNull
-            @Override
-            public void onResponse(Call<Fare> call, Response<Fare> response) {
-                if(response.isSuccessful())
-                    searchedFare.setValue(response.body());
-
-            }
-
-            @EverythingIsNonNull
-            @Override
-            public void onFailure(Call<Fare> call, Throwable t) {
-                Log.i("Retrofit","Something went wrong! :(");
-            }
-        });
+    public MutableLiveData<List<Fare>> getFares(){
+        return searchedFares;
     }
 
     public LiveData<List<StopLocation>> getStops(){
