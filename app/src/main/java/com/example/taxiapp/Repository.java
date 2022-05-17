@@ -70,6 +70,7 @@ public class Repository {
 
 
 
+
         searchedFare = new MutableLiveData<>();
         searchedFares = new MutableLiveData<>();
 
@@ -195,6 +196,8 @@ public class Repository {
 
     }
 
+
+
     public MutableLiveData<List<Fare>> getFares(){
         return searchedFares;
     }
@@ -204,5 +207,12 @@ public class Repository {
     }
 
 
-
+    public void populateStops() {
+        executorService.execute(()->dao.insert(new StopLocation(8600073,"Vejle")));
+        executorService.execute(()->dao.insert(new StopLocation(8600066,"Horsens")));
+        executorService.execute(()->dao.insert(new StopLocation(8600626,"Kobenhavn H")));
+        executorService.execute(()->dao.insert(new StopLocation(8600858,"CPH Lufthavn")));
+        executorService.execute(()->dao.insert(new StopLocation(8600327,"Sonderborg")));
+        executorService.execute(()->dao.insert(new StopLocation(8600053,"Aarhus")));
+    }
 }

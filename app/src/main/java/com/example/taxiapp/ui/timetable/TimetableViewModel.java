@@ -49,4 +49,8 @@ public class TimetableViewModel extends AndroidViewModel {
     public LiveData<String> getText() {
         return mText;
     }
+
+    public void populateStops() {
+        repository.populateStops();
+    }
 }

@@ -56,6 +56,9 @@ public class TimetableFragment extends Fragment {
         timetableViewModel.getAllStops().observe(getViewLifecycleOwner(), new Observer<List<StopLocation>>() {
             @Override
             public void onChanged(List<StopLocation> stops) {
+                if(stops.isEmpty()){
+                    timetableViewModel.populateStops();
+                }
                 locationNames.addAll(stops);
                 Log.d("TimetableFG", locationNames.get(0).toString());
                 for (StopLocation stop : locationNames) {
