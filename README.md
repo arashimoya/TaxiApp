@@ -17,3 +17,4 @@ He asked us if we can make an app that is aesthetically pleasing, is easy to use
 - [x] 9. As an user I want to open the chat window, so I can contact my work colleagues. 
 - [x] 10. As an user I want to open the information window, so I can get knowledge about certain information. 
 
+Youtube link: https://www.youtube.com/watch?v=rFPfooVYGIM
